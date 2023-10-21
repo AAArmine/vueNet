@@ -1,39 +1,49 @@
 <template>
   <div>
-    <h1>First vue project</h1>
-    <p>{{ test }}</p>
-    <input type="text" ref="name" />
-    <button @click="handleClick">click</button>
-    <div v-if="showModal">
-      <Modal :theme="theme" @close="handleClick">
-        <h2>mod title</h2>
-        <p>mod paragraph</p>
-        <template v-slot:other><p>some other p</p></template>
-      </Modal>
-    </div>
+    <h1>Reaction Timer</h1>
+    <button @click="start" :disabled="isPlaying">Play</button>
+    <Block v-if="isPlaying" :delay="delay" @end="endGame" />
+   
+    <Results v-if='showResult' :score="score" />
+    <Child @child-event="handleChildData" />
+    <p>Data received from child component: {{ childData }}</p>
   </div>
 </template>
 
 <script>
-import Modal from "./components/Modal";
-
+import Block from "./components/Block.vue";
+import Results from "./components/Results.vue";
+import Child from "./components/Child.vue";
 export default {
   name: "App",
-  components: {
-    Modal,
-  },
+  components: { Block, Results, Child },
   data() {
     return {
-      test: "value",
-      header: "my header",
-      textModal: ["paragraph 1", "paragraph 2"],
-      theme: true,
-      showModal: false,
+      isPlaying: false,
+      delay: null,
+      score: null,
+      childData: "",
+      showResult: false,
     };
   },
   methods: {
-    handleClick() {
-      this.showModal = !this.showModal;
+    start() {
+      this.isPlaying = true;
+      this.delay = 1000 + Math.random() * 5000;
+      console.log(this.delay);
+      this.showResult = false;
+    },
+    mounted() {
+      console.log("mounted app");
+    },
+    endGame(reactionTime) {
+      this.score = reactionTime;
+      console.log("endGme", this.score);
+      this.isPlaying = false;
+      this.showResult = true;
+    },
+    handleChildData(data) {
+      this.childData = data;
     },
   },
 };
@@ -45,7 +55,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #172838;
   margin-top: 60px;
 }
 .active {
