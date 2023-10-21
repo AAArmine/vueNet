@@ -1,4 +1,4 @@
-# modal-project
+# reaction-project
 
 ## Project setup
 ```
